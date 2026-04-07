@@ -39,7 +39,6 @@ build/
 .idea/
 *.swp
 *.swo
-*~
 
 # Max MSP
 **/externals/
