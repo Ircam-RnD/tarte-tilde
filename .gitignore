@@ -40,3 +40,6 @@ build/
 *.swp
 *.swo
 *~
+
+# Max MSP
+**/externals/
