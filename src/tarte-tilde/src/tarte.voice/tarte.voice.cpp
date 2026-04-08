@@ -10,6 +10,7 @@ class Voice
 {
 private:
     std::shared_ptr<tarte::Larynx<double>> processor_;
+    tarte::Articulation articulation;
 
 public:
     MIN_DESCRIPTION{"Self-oscillating voice model"};
@@ -33,6 +34,28 @@ public:
         processor_->Process(subglottal_pressure);
         return processor_->ReadRadiatedPressure();
     }
+
+    // clang-format off
+    message<> listin { this, "list",
+        MIN_FUNCTION {
+            if (args.size() == processor_->get_resonator()->get_N()+1) {
+                processor_->get_resonator()->SetTargetGeometry(args.data(), args.size());
+            } else if (args.size() == 2){
+                articulation.SetFromFormants(args[0], args[1]);
+                processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation);
+            } else {
+                cout << "Wrong number of areas or formant frequencies" << endl;
+            }
+            return {};
+        }
+    };
+
+    message<> set_lpf_cutoff_geometry { this, "lpf_cutoff",
+        MIN_FUNCTION {
+            processor_->get_resonator()->set_lp_frequencies(args[0]);
+            return {};
+        }
+    };
 };
 
 MIN_EXTERNAL(Voice);
