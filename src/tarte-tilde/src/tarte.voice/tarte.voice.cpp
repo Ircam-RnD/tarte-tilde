@@ -61,7 +61,7 @@ public:
 
     message<> listin { this, "list",
         MIN_FUNCTION {
-            if (processor_){
+            if (processor_->get_resonator()){
                 if (args.size() == processor_->get_resonator()->get_N()+1) {
                     std::vector<double> areas;
                     areas.reserve(args.size());
@@ -81,7 +81,7 @@ public:
 
     message<> set_lpf_cutoff_geometry { this, "lpf_cutoff",
         MIN_FUNCTION {
-            if (processor_)
+            if (processor_->get_resonator())
                 processor_->get_resonator()->set_lp_frequencies(args[0]);
             return {};
         }
