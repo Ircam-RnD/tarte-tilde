@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 project(tarte-tilde)
-
+set (CMAKE_CXX_STANDARD 23)
 enable_testing()
 
 # Export compile config

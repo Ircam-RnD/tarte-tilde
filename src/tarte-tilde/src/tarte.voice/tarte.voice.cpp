@@ -2,6 +2,8 @@
 #include "c74_min.h"
 #include <atomic>
 #include <memory>
+#include <tuple>
+#include <Eigen/Dense>
 using namespace c74::min;
 
 class Voice
@@ -20,6 +22,7 @@ public:
     // Ports
     inlet<> input{this, "(signal) sub-glottal pressure"};
     outlet<> output{this, "(signal) radiated pressure", "signal"};
+    outlet<> folds_output{this, "(list) folds modal characteristics", "list"};
 
     Voice(const atom &args = {})
     {
@@ -74,6 +77,55 @@ public:
                 } else {
                     cout << "Wrong number of areas or formant frequencies" << endl;
                 }
+            }
+            return {};
+        }
+    };
+
+    message<> get_modal_characteristics_folds { this, "folds_modes",
+        MIN_FUNCTION {
+            if (processor_){
+                auto [eigen_frequencies, zeta, eigen_vectors] = processor_->GetModalCharacteristics();
+                atoms eigen_frequencies_atoms, zeta_atoms, eigen_vectors_atoms;
+                eigen_frequencies_atoms.reserve(eigen_frequencies.size());
+                zeta_atoms.reserve(zeta.size());
+                eigen_vectors_atoms.reserve(eigen_vectors.col(0).size());
+
+                for (const auto& f : eigen_frequencies)
+                    eigen_frequencies_atoms.push_back(f);
+
+                for (const auto& d : zeta)
+                    zeta_atoms.push_back(d);
+                
+                atoms freq_msg;
+                freq_msg.push_back("frequencies");
+                freq_msg.insert(freq_msg.end(),
+                                eigen_frequencies_atoms.begin(),
+                                eigen_frequencies_atoms.end());
+                folds_output.send(freq_msg);
+                atoms zeta_msg;
+                zeta_msg.push_back("zetas");
+                zeta_msg.insert(zeta_msg.end(),
+                                zeta_atoms.begin(),
+                                zeta_atoms.end());
+                folds_output.send(zeta_msg);
+
+                for (std::size_t i = 0; i<3; i++) {
+                    auto vec = eigen_vectors.col(i);
+                    for (const auto& v : vec)
+                        eigen_vectors_atoms.push_back(v);
+
+                    atoms vec_msg;
+                    vec_msg.push_back("vector");
+                    vec_msg.push_back(i);
+                    vec_msg.insert(vec_msg.end(),
+                                eigen_vectors_atoms.begin(),
+                                eigen_vectors_atoms.end());
+                    folds_output.send(vec_msg);
+
+                    eigen_vectors_atoms.clear();
+                }
+                return {};
             }
             return {};
         }
