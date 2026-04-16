@@ -35,7 +35,7 @@ public:
     operator()(sample subglottal_pressure)
     {
         processor_->Process(subglottal_pressure);
-        return processor_->ReadRadiatedPressure();
+        return processor_->ReadRadiatedPressure() / double(3162); // -70 dB gain
     }
 
     // clang-format off
@@ -47,6 +47,20 @@ public:
         setter{MIN_FUNCTION{
                 if (processor_){
                     processor_->set_eta_stiffness(args[0]);
+                }
+                return args;
+            }
+        }
+    };
+
+    attribute<number, threadsafe::no, limit::clamp> lambda_sav{
+        this,
+        "SAV drift control parameters",
+        1e3,
+        range{0, 1e4},
+        setter{MIN_FUNCTION{
+                if (processor_){
+                    processor_->set_lambda_sav(args[0]);
                 }
                 return args;
             }
@@ -159,6 +173,19 @@ public:
                 processor_->set_stiffnesses(args[0], args[1], args[2], args[3]);
                 }else {
                     cout << "You must provide 4 stiffnesses (lower, upper, body, coupling)" << endl;
+                }
+            }
+            return {};
+        }
+    };
+
+    message<> set_rest_positions { this, "rest_positions",
+        MIN_FUNCTION {
+            if (processor_){
+                if (args.size() == 3) {
+                processor_->set_rest_positions(args[0], args[1], args[2]);
+                }else {
+                    cout << "You must provide 3 positions (lower, upper, body)" << endl;
                 }
             }
             return {};
