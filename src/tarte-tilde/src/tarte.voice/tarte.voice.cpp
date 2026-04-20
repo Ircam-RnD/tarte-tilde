@@ -96,54 +96,54 @@ public:
         }
     };
 
-    message<> get_modal_characteristics_folds { this, "folds_modes",
-        MIN_FUNCTION {
-            if (processor_){
-                auto [eigen_frequencies, zeta, eigen_vectors] = processor_->GetModalCharacteristics();
-                atoms eigen_frequencies_atoms, zeta_atoms, eigen_vectors_atoms;
-                eigen_frequencies_atoms.reserve(eigen_frequencies.size());
-                zeta_atoms.reserve(zeta.size());
-                eigen_vectors_atoms.reserve(eigen_vectors.col(0).size());
+    // message<> get_modal_characteristics_folds { this, "folds_modes",
+    //     MIN_FUNCTION {
+    //         if (processor_){
+    //             auto [eigen_frequencies, zeta, eigen_vectors] = processor_->GetModalCharacteristics();
+    //             atoms eigen_frequencies_atoms, zeta_atoms, eigen_vectors_atoms;
+    //             eigen_frequencies_atoms.reserve(eigen_frequencies.size());
+    //             zeta_atoms.reserve(zeta.size());
+    //             eigen_vectors_atoms.reserve(eigen_vectors.col(0).size());
 
-                for (const auto& f : eigen_frequencies)
-                    eigen_frequencies_atoms.push_back(f);
+    //             for (const auto& f : eigen_frequencies)
+    //                 eigen_frequencies_atoms.push_back(f);
 
-                for (const auto& d : zeta)
-                    zeta_atoms.push_back(d);
+    //             for (const auto& d : zeta)
+    //                 zeta_atoms.push_back(d);
                 
-                atoms freq_msg;
-                freq_msg.push_back("frequencies");
-                freq_msg.insert(freq_msg.end(),
-                                eigen_frequencies_atoms.begin(),
-                                eigen_frequencies_atoms.end());
-                folds_output.send(freq_msg);
-                atoms zeta_msg;
-                zeta_msg.push_back("zetas");
-                zeta_msg.insert(zeta_msg.end(),
-                                zeta_atoms.begin(),
-                                zeta_atoms.end());
-                folds_output.send(zeta_msg);
+    //             atoms freq_msg;
+    //             freq_msg.push_back("frequencies");
+    //             freq_msg.insert(freq_msg.end(),
+    //                             eigen_frequencies_atoms.begin(),
+    //                             eigen_frequencies_atoms.end());
+    //             folds_output.send(freq_msg);
+    //             atoms zeta_msg;
+    //             zeta_msg.push_back("zetas");
+    //             zeta_msg.insert(zeta_msg.end(),
+    //                             zeta_atoms.begin(),
+    //                             zeta_atoms.end());
+    //             folds_output.send(zeta_msg);
 
-                for (std::size_t i = 0; i<3; i++) {
-                    auto vec = eigen_vectors.col(i);
-                    for (const auto& v : vec)
-                        eigen_vectors_atoms.push_back(v);
+    //             for (std::size_t i = 0; i<3; i++) {
+    //                 auto vec = eigen_vectors.col(i);
+    //                 for (const auto& v : vec)
+    //                     eigen_vectors_atoms.push_back(v);
 
-                    atoms vec_msg;
-                    vec_msg.push_back("vector");
-                    vec_msg.push_back(i);
-                    vec_msg.insert(vec_msg.end(),
-                                eigen_vectors_atoms.begin(),
-                                eigen_vectors_atoms.end());
-                    folds_output.send(vec_msg);
+    //                 atoms vec_msg;
+    //                 vec_msg.push_back("vector");
+    //                 vec_msg.push_back(i);
+    //                 vec_msg.insert(vec_msg.end(),
+    //                             eigen_vectors_atoms.begin(),
+    //                             eigen_vectors_atoms.end());
+    //                 folds_output.send(vec_msg);
 
-                    eigen_vectors_atoms.clear();
-                }
-                return {};
-            }
-            return {};
-        }
-    };
+    //                 eigen_vectors_atoms.clear();
+    //             }
+    //             return {};
+    //         }
+    //         return {};
+    //     }
+    // };
 
     message<> set_lpf_cutoff_geometry { this, "lpf_cutoff",
         MIN_FUNCTION {
@@ -191,6 +191,69 @@ public:
             return {};
         }
     };
+
+    message<> set_rest_muscles_activation { this, "muscles_activation",
+        MIN_FUNCTION {
+            if (processor_){
+                if (args.size() == 3) {
+                processor_->set_muscles_activation(args[0], args[1], args[2]);
+                }else {
+                    cout << "You must provide 3 values (Cricothyroid, Thyroarytenoid, lateral Cricoarytenoid)" << endl;
+                }
+            }
+            return {};
+        }
+    };
+
+    message<> print_params { this, "print_params",
+    MIN_FUNCTION {
+        if (!processor_) return {};
+
+        auto send_scalar = [this](const char* label, double val) {
+            atoms msg { label, val };
+            folds_output.send(msg);
+        };
+        auto send_vec3 = [this](const char* label, Eigen::Vector<double, 3> vec) {
+            atoms msg { label, vec[0], vec[1], vec[2] };
+            folds_output.send(msg);
+        };
+        auto send_vec4 = [this](const char* label, Eigen::Vector<double, 4> vec) {
+            atoms msg { label, vec[0], vec[1], vec[2], vec[3] };
+            folds_output.send(msg);
+        };
+
+        // Left fold
+        send_vec3("left_masses",          processor_->get_masses(tarte::kLeft));
+        send_vec3("left_rest_positions",  processor_->get_rest_positions(tarte::kLeft));
+        send_vec3("left_lengths",         processor_->get_lengths(tarte::kLeft));
+        send_vec3("left_thicknesses",     processor_->get_thicknesses(tarte::kLeft));
+        send_vec4("left_stiffnesses",     processor_->get_stiffnesses(tarte::kLeft));
+        send_scalar("left_eta_stiffness", processor_->get_eta_stiffness(tarte::kLeft));
+
+        // Right fold
+        send_vec3("right_masses",          processor_->get_masses(tarte::kRight));
+        send_vec3("right_rest_positions",  processor_->get_rest_positions(tarte::kRight));
+        send_vec3("right_lengths",         processor_->get_lengths(tarte::kRight));
+        send_vec3("right_thicknesses",     processor_->get_thicknesses(tarte::kRight));
+        send_vec4("right_stiffnesses",     processor_->get_stiffnesses(tarte::kRight));
+        send_scalar("right_eta_stiffness", processor_->get_eta_stiffness(tarte::kRight));
+
+        // Contact
+        send_scalar("contact_stiffness",       processor_->get_contact_stiffness());
+        send_scalar("alpha_contact_stiffness",  processor_->get_alpha_contact_stiffness());
+        send_scalar("eta_contact_stiffness",    processor_->get_eta_contact_stiffness());
+
+        // Fluid
+        send_scalar("c0",   processor_->get_c0());
+        send_scalar("rho0", processor_->get_rho0());
+        send_scalar("kt",   processor_->get_kt());
+
+        // Solver
+        send_scalar("lambda_sav", processor_->get_lambda_sav());
+
+        return {};
+    }
+};
 };
 
 MIN_EXTERNAL(Voice);
