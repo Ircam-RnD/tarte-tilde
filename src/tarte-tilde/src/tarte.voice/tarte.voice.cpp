@@ -221,35 +221,34 @@ public:
             atoms msg { label, vec[0], vec[1], vec[2], vec[3] };
             folds_output.send(msg);
         };
-
         // Left fold
-        send_vec3("left_masses",          processor_->get_masses(tarte::kLeft));
-        send_vec3("left_rest_positions",  processor_->get_rest_positions(tarte::kLeft));
-        send_vec3("left_lengths",         processor_->get_lengths(tarte::kLeft));
-        send_vec3("left_thicknesses",     processor_->get_thicknesses(tarte::kLeft));
-        send_vec4("left_stiffnesses",     processor_->get_stiffnesses(tarte::kLeft));
-        send_scalar("left_eta_stiffness", processor_->get_eta_stiffness(tarte::kLeft));
+        send_vec3("left_masses", processor_->get_masses(tarte::kLeft) * 1e6);                       // mg
+        send_vec3("left_rest_positions", processor_->get_rest_positions(tarte::kLeft) * 1e3);       // mm
+        send_vec3("left_lengths", processor_->get_lengths(tarte::kLeft) * 1e3);                     // mm
+        send_vec3("left_thicknesses", processor_->get_thicknesses(tarte::kLeft) * 1e3);             // mm
+        send_vec4("left_stiffnesses", processor_->get_stiffnesses(tarte::kLeft));                   // N/m
+        send_scalar("left_eta_stiffness", processor_->get_eta_stiffness(tarte::kLeft) * 1e-6);      // mm-2
 
         // Right fold
-        send_vec3("right_masses",          processor_->get_masses(tarte::kRight));
-        send_vec3("right_rest_positions",  processor_->get_rest_positions(tarte::kRight));
-        send_vec3("right_lengths",         processor_->get_lengths(tarte::kRight));
-        send_vec3("right_thicknesses",     processor_->get_thicknesses(tarte::kRight));
-        send_vec4("right_stiffnesses",     processor_->get_stiffnesses(tarte::kRight));
-        send_scalar("right_eta_stiffness", processor_->get_eta_stiffness(tarte::kRight));
+        send_vec3("right_masses", processor_->get_masses(tarte::kRight) * 1e6);                     // mg
+        send_vec3("right_rest_positions", processor_->get_rest_positions(tarte::kRight) * 1e3);     // mm
+        send_vec3("right_lengths", processor_->get_lengths(tarte::kRight) * 1e3);                   // mm
+        send_vec3("right_thicknesses", processor_->get_thicknesses(tarte::kRight) * 1e3);           // mm
+        send_vec4("right_stiffnesses", processor_->get_stiffnesses(tarte::kRight));                 // N/m
+        send_scalar("right_eta_stiffness", processor_->get_eta_stiffness(tarte::kRight) * 1e-6);    // mm-2
 
         // Contact
-        send_scalar("contact_stiffness",       processor_->get_contact_stiffness());
-        send_scalar("alpha_contact_stiffness",  processor_->get_alpha_contact_stiffness());
-        send_scalar("eta_contact_stiffness",    processor_->get_eta_contact_stiffness());
+        send_scalar("contact_stiffness", processor_->get_contact_stiffness());                      // N/m
+        send_scalar("alpha_contact_stiffness", processor_->get_alpha_contact_stiffness());          // no units
+        send_scalar("eta_contact_stiffness", processor_->get_eta_contact_stiffness() * 1e-6);       // mm-2
 
         // Fluid
-        send_scalar("c0",   processor_->get_c0());
-        send_scalar("rho0", processor_->get_rho0());
-        send_scalar("kt",   processor_->get_kt());
+        send_scalar("c0", processor_->get_c0());                                                    // m/s
+        send_scalar("rho0", processor_->get_rho0());                                                // kg.m-3
+        send_scalar("kt", processor_->get_kt());                                                    // no units
 
         // Solver
-        send_scalar("lambda_sav", processor_->get_lambda_sav());
+        send_scalar("lambda_sav", processor_->get_lambda_sav()); // s-1
 
         return {};
     }
