@@ -1,4 +1,5 @@
 #include "larynx.h"
+#include "vowels.h"
 #include "c74_min.h"
 #include <atomic>
 #include <memory>
@@ -18,7 +19,7 @@ class Voice
 {
 private:
     static const int N_signals_in_{1};
-    static const int N_signals_out_{6};
+    static const int N_signals_out_{7};
 
     std::shared_ptr<tarte::Larynx<ftype>> processor_;
     tarte::Articulation articulation_;
@@ -35,9 +36,10 @@ public:
 
     Voice(const atom &args = {})
     {
-        processor_ = std::make_shared<tarte::Larynx<ftype>>(44100);
+        processor_ = std::make_shared<tarte::Larynx<ftype>>(44100, true);
         processor_->get_resonator()->set_l0(17e-2);
-        processor_->get_resonator()->SetConstantSection(25e-4);
+        articulation_.SetFromVowel(tarte::vowels::a);
+        processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation_);
     }
 
     void operator()(audio_bundle input, audio_bundle output)
@@ -59,6 +61,7 @@ public:
             out[4][i] = processor_->ReadSupGlottalFlow();
             // Pressure drop (Pa)
             out[5][i] = processor_->ReadPressureDrop();
+            out[6][i] = processor_->ReadEpsilonSav();
         }
     }
 
@@ -77,9 +80,23 @@ public:
         }
     };
 
+    attribute<number, threadsafe::no, limit::clamp> epsilon_smooth{
+        this,
+        "Smoothing epsilon for channel closure",
+        1e-4,
+        range{1e-6, 1e-2},
+        setter{MIN_FUNCTION{
+                if (processor_){
+                    processor_->set_epsilon_smooth(args[0]);
+                }
+                return args;
+            }
+        }
+    };
+
     attribute<number, threadsafe::no, limit::clamp> lambda_sav{
         this,
-        "SAV drift control parameters",
+        "SAV drift control parameter",
         1e3,
         range{0, 1e4},
         setter{MIN_FUNCTION{
@@ -95,7 +112,7 @@ public:
         MIN_FUNCTION{
             float sr = args[0];
             if (processor_)
-                processor_->DspSetup(sr);
+                processor_->DspSetup(sr, &articulation_);
             return {};
         }
     };
