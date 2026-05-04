@@ -6,13 +6,22 @@
 #include <Eigen/Dense>
 using namespace c74::min;
 
+// Multichannel functions declarations
+long ph_multichanneloutputs(c74::max::t_object *x, long index, long count);
+long ph_inputchanged(c74::max::t_object *x, long index, long count);
+
+using ftype = double;
+
 class Voice
     : public object<Voice>,
-      public sample_operator<1, 1>
+      public mc_operator<>
 {
 private:
-    std::shared_ptr<tarte::Larynx<double>> processor_;
-    tarte::Articulation articulation;
+    static const int N_signals_in_{1};
+    static const int N_signals_out_{6};
+
+    std::shared_ptr<tarte::Larynx<ftype>> processor_;
+    tarte::Articulation articulation_;
 
 public:
     MIN_DESCRIPTION{"Self-oscillating voice model"};
@@ -21,21 +30,36 @@ public:
 
     // Ports
     inlet<> input{this, "(signal) sub-glottal pressure"};
-    outlet<> output{this, "(signal) radiated pressure", "signal"};
-    outlet<> folds_output{this, "(list) folds modal characteristics", "list"};
+    outlet<> output{this, "(multichannelsignal) output signals", "multichannelsignal"};
+    outlet<> parameters_out{this, "(dict) model parameters", "dict"};
 
     Voice(const atom &args = {})
     {
-        processor_ = std::make_shared<tarte::Larynx<double>>(44100);
+        processor_ = std::make_shared<tarte::Larynx<ftype>>(44100);
         processor_->get_resonator()->set_l0(17e-2);
         processor_->get_resonator()->SetConstantSection(25e-4);
     }
 
-    sample
-    operator()(sample subglottal_pressure)
+    void operator()(audio_bundle input, audio_bundle output)
     {
-        processor_->Process(subglottal_pressure);
-        return processor_->ReadRadiatedPressure() / double(3162); // -70 dB gain
+        auto out = output.samples();
+        auto in = input.samples();
+
+        for (auto i = 0; i < output.frame_count(); ++i)
+        {
+            processor_->Process(in[0][i]);
+            // Pressure
+            out[0][i] = processor_->ReadRadiatedPressure() / ftype(3162); // -70 dB gain
+            // Openings (cast to mm)
+            ftype *openings = (processor_->ReadEffectiveOpenings()).data();
+            out[1][i] = openings[0] * 1000;
+            out[2][i] = openings[1] * 1000;
+            out[3][i] = openings[2] * 1000;
+            // Glottal flow (cast to cm^3/s)
+            out[4][i] = processor_->ReadSupGlottalFlow();
+            // Pressure drop (Pa)
+            out[5][i] = processor_->ReadPressureDrop();
+        }
     }
 
     // clang-format off
@@ -80,14 +104,14 @@ public:
         MIN_FUNCTION {
             if (processor_->get_resonator()){
                 if (args.size() == processor_->get_resonator()->get_N()+1) {
-                    std::vector<double> areas;
+                    std::vector<ftype> areas;
                     areas.reserve(args.size());
                     for (auto& a : args)
-                        areas.push_back(static_cast<double>(a));
+                        areas.push_back(static_cast<ftype>(a));
                     processor_->get_resonator()->SetTargetGeometry(areas.data(), areas.size());
                 } else if (args.size() == 2){
-                    articulation.SetFromFormants(args[0], args[1], 5);
-                    processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation);
+                    articulation_.SetFromFormants(args[0], args[1], 5);
+                    processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation_);
                 } else {
                     cout << "Wrong number of areas or formant frequencies" << endl;
                 }
@@ -95,55 +119,6 @@ public:
             return {};
         }
     };
-
-    // message<> get_modal_characteristics_folds { this, "folds_modes",
-    //     MIN_FUNCTION {
-    //         if (processor_){
-    //             auto [eigen_frequencies, zeta, eigen_vectors] = processor_->GetModalCharacteristics();
-    //             atoms eigen_frequencies_atoms, zeta_atoms, eigen_vectors_atoms;
-    //             eigen_frequencies_atoms.reserve(eigen_frequencies.size());
-    //             zeta_atoms.reserve(zeta.size());
-    //             eigen_vectors_atoms.reserve(eigen_vectors.col(0).size());
-
-    //             for (const auto& f : eigen_frequencies)
-    //                 eigen_frequencies_atoms.push_back(f);
-
-    //             for (const auto& d : zeta)
-    //                 zeta_atoms.push_back(d);
-                
-    //             atoms freq_msg;
-    //             freq_msg.push_back("frequencies");
-    //             freq_msg.insert(freq_msg.end(),
-    //                             eigen_frequencies_atoms.begin(),
-    //                             eigen_frequencies_atoms.end());
-    //             folds_output.send(freq_msg);
-    //             atoms zeta_msg;
-    //             zeta_msg.push_back("zetas");
-    //             zeta_msg.insert(zeta_msg.end(),
-    //                             zeta_atoms.begin(),
-    //                             zeta_atoms.end());
-    //             folds_output.send(zeta_msg);
-
-    //             for (std::size_t i = 0; i<3; i++) {
-    //                 auto vec = eigen_vectors.col(i);
-    //                 for (const auto& v : vec)
-    //                     eigen_vectors_atoms.push_back(v);
-
-    //                 atoms vec_msg;
-    //                 vec_msg.push_back("vector");
-    //                 vec_msg.push_back(i);
-    //                 vec_msg.insert(vec_msg.end(),
-    //                             eigen_vectors_atoms.begin(),
-    //                             eigen_vectors_atoms.end());
-    //                 folds_output.send(vec_msg);
-
-    //                 eigen_vectors_atoms.clear();
-    //             }
-    //             return {};
-    //         }
-    //         return {};
-    //     }
-    // };
 
     message<> set_lpf_cutoff_geometry { this, "lpf_cutoff",
         MIN_FUNCTION {
@@ -209,17 +184,17 @@ public:
     MIN_FUNCTION {
         if (!processor_) return {};
 
-        auto send_scalar = [this](const char* label, double val) {
+        auto send_scalar = [this](const char* label, ftype val) {
             atoms msg { label, val };
-            folds_output.send(msg);
+            parameters_out.send(msg);
         };
-        auto send_vec3 = [this](const char* label, Eigen::Vector<double, 3> vec) {
+        auto send_vec3 = [this](const char* label, Eigen::Vector<ftype, 3> vec) {
             atoms msg { label, vec[0], vec[1], vec[2] };
-            folds_output.send(msg);
+            parameters_out.send(msg);
         };
-        auto send_vec4 = [this](const char* label, Eigen::Vector<double, 4> vec) {
+        auto send_vec4 = [this](const char* label, Eigen::Vector<ftype, 4> vec) {
             atoms msg { label, vec[0], vec[1], vec[2], vec[3] };
-            folds_output.send(msg);
+            parameters_out.send(msg);
         };
         // Left fold
         send_vec3("left_masses", processor_->get_masses(tarte::kLeft) * 1e6);                       // mg
@@ -251,8 +226,34 @@ public:
         send_scalar("lambda_sav", processor_->get_lambda_sav()); // s-1
 
         return {};
+        }
+    };
+    
+    static constexpr int get_N_signals_out(){
+        return N_signals_out_;
     }
-};
+
+    message<> maxclass_setup{this, "maxclass_setup",
+        MIN_FUNCTION{
+            c74::max::t_class *c = args[0];
+            c74::max::class_addmethod(c, (c74::max::method)ph_multichanneloutputs,
+                                        "multichanneloutputs", c74::max::A_CANT, 0);
+            c74::max::class_addmethod(c, (c74::max::method)ph_inputchanged, "inputchanged",
+                                        c74::max::A_CANT, 0);
+            return {};
+        }
+    };
 };
 
 MIN_EXTERNAL(Voice);
+
+// Multichannel functions definitions
+long ph_multichanneloutputs(c74::max::t_object *x, long index, long count) {
+  minwrap<Voice> *ob = (minwrap<Voice> *)(x);
+  return ob->m_min_object.get_N_signals_out();
+  
+}
+
+long ph_inputchanged(c74::max::t_object *x, long index, long count) {
+  return 1;
+}
