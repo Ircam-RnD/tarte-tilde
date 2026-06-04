@@ -33,6 +33,7 @@ public:
     inlet<> input{this, "(signal) sub-glottal pressure"};
     outlet<> output{this, "(multichannelsignal) output signals", "multichannelsignal"};
     outlet<> parameters_out{this, "(dict) model parameters", "dict"};
+    outlet<> geometry_out{this, "(list) geometry output", "list"};
 
     Voice(const atom &args = {})
     {
@@ -40,6 +41,7 @@ public:
         processor_->get_resonator()->set_l0(17e-2);
         articulation_.SetFromVowel(tarte::vowels::a);
         processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation_);
+        // processor_->set_contact_stiffness(0);
     }
 
     void operator()(audio_bundle input, audio_bundle output)
@@ -66,18 +68,53 @@ public:
     }
 
     // clang-format off
-    attribute<number, threadsafe::no, limit::clamp> eta_stiffness{
+    attribute<number, threadsafe::no, limit::clamp> noise_ratio{
         this,
-        "eta stifness vocal folds",
-        1e6,
-        range{0, 1e12},
+        "noise_ratio",
+        0.f,
+        range{0.f, 1.f},
         setter{MIN_FUNCTION{
                 if (processor_){
-                    processor_->set_eta_stiffness(args[0]);
+                    processor_->set_noise_ratio(args[0]);
+                    cout << processor_->get_noise_ratio() << endl;
                 }
                 return args;
             }
         }
+    };
+
+    attribute<int, threadsafe::no, limit::clamp> gender{
+        this,
+        "gender",
+        0,
+        range{0, 1},
+        setter{MIN_FUNCTION{
+                if (processor_){
+                    processor_->set_gender(args[0]);
+                }
+                return args;
+            }
+        }
+    };
+
+    attribute<bool, threadsafe::no> yielding_walls{
+        this,
+        "yielding_walls",
+        true,
+        setter{MIN_FUNCTION{
+                if (processor_){
+                    processor_->get_resonator()->set_yielding_walls(args[0]);
+                }
+                return args;
+            }
+        }
+    };
+
+    attribute<int, threadsafe::no, limit::clamp> NinterpVowel{
+        this,
+        "NinterpVowel",
+        4,
+        range{2, 5}
     };
 
     attribute<number, threadsafe::no, limit::clamp> epsilon_smooth{
@@ -97,7 +134,7 @@ public:
     attribute<number, threadsafe::no, limit::clamp> lambda_sav{
         this,
         "SAV drift control parameter",
-        1e3,
+        10,
         range{0, 1e4},
         setter{MIN_FUNCTION{
                 if (processor_){
@@ -127,14 +164,34 @@ public:
                         areas.push_back(static_cast<ftype>(a));
                     processor_->get_resonator()->SetTargetGeometry(areas.data(), areas.size());
                 } else if (args.size() == 2){
-                    articulation_.SetFromFormants(args[0], args[1], 5);
+                    articulation_.SetFromFormants(args[0], args[1], NinterpVowel);
                     processor_->get_resonator()->SetTargetGeometryFromArticulation(articulation_);
                 } else {
-                    cout << "Wrong number of areas or formant frequencies" << endl;
+                    cout << "Wrong number of areas or formant frequencies should be" << processor_->get_resonator()->get_N()+1 << endl;
                 }
             }
             return {};
         }
+    };
+
+    message<> get_articulation { this, "get_articulation",
+        MIN_FUNCTION {
+            if (args.empty()) return {};
+
+            std::vector<ftype> in;
+            in.reserve(args.size());
+            for (auto& a : args)
+                in.push_back(static_cast<ftype>(a));
+
+            std::vector<ftype> out(args.size());
+            articulation_.getAreas(in.data(), out.data(), args.size());
+
+            atoms result;
+            for (auto val : out)
+                result.push_back(atom(val));
+            geometry_out.send(result);
+            return {};
+        }   
     };
 
     message<> set_lpf_cutoff_geometry { this, "lpf_cutoff",
@@ -232,7 +289,6 @@ public:
         // Contact
         send_scalar("contact_stiffness", processor_->get_contact_stiffness());                      // N/m
         send_scalar("alpha_contact_stiffness", processor_->get_alpha_contact_stiffness());          // no units
-        send_scalar("eta_contact_stiffness", processor_->get_eta_contact_stiffness() * 1e-6);       // mm-2
 
         // Fluid
         send_scalar("c0", processor_->get_c0());                                                    // m/s
