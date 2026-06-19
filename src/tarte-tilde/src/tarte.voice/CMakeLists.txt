@@ -16,7 +16,7 @@ set(SOURCE_FILES
     tarte.voice.cpp
 )
 
-find_package (Eigen3 3.4 REQUIRED NO_MODULE)
+find_package (Eigen3 5.0 REQUIRED NO_MODULE)
 
 add_library(${PROJECT_NAME} MODULE ${SOURCE_FILES})
 
