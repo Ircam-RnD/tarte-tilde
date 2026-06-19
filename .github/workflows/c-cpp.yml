@@ -25,11 +25,8 @@ jobs:
         cd ./build
         cmake -DCMAKE_BUILD_TYPE=Release .. -DCMAKE_OSX_ARCHITECTURES:STRING=arm64
         cmake --build . --config "Release"
-        cd ../../
-        cp -r ./1dSAV/externals package/
-        rm -rf ./1dSAV/
-        mv package/ 1dSAV/
-        zip -r "1dSAV.zip" 1dSAV
+        cd ..
+        zip -r "tarte-tilde.zip" package
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -46,8 +43,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: src/maxmsp/1dSAV.zip
-        asset_name: 1dSAV.zip
+        asset_path: src/tarte-tilde/tarte-tilde.zip
+        asset_name: tarte-tilde.zip
         asset_content_type: application/zip
     - name: Publish release
       uses: StuYarrow/publish-release@v1.1.2
@@ -70,17 +67,13 @@ jobs:
         brew install eigen
     - name: Build external
       run: |
-        cd src/maxmsp
-        rm -rf ./1dSAV/build/ || true
-        mkdir -p ./1dSAV/build
-        cd ./1dSAV/build
+        cd src/tarte-tilde
+        mkdir -p ./build
+        cd ./build
         cmake -DCMAKE_BUILD_TYPE=Release .. -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64
         cmake --build . --config "Release"
-        cd ../../
-        cp -r ./1dSAV/externals package/
-        rm -rf ./1dSAV/
-        mv package/ 1dSAV/
-        zip -r "1dSAV.zip" 1dSAV
+        cd ..
+        zip -r "tarte-tilde.zip" package
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -97,8 +90,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: src/maxmsp/1dSAV.zip
-        asset_name: 1dSAV.zip
+        asset_path: src/tarte-tilde/tarte-tilde.zip
+        asset_name: tarte-tilde.zip
         asset_content_type: application/zip
     - name: Publish release
       uses: StuYarrow/publish-release@v1.1.2
@@ -119,7 +112,7 @@ jobs:
     - name: Build external
       run: |
         # Use PowerShell commands
-        cd src/processor
+        cd src/tarte-tilde
         curl -L -O https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
         tar -xf eigen-3.4.0.zip
         cd eigen-3.4.0
@@ -130,16 +123,12 @@ jobs:
         cd ../../
         $eigencmake = (Get-Location).Path
         Write-Output "Eigen CMake directory: $eigencmake"
-        cd ../maxmsp
-        mkdir -p ./1dSAV/build
-        cd ./1dSAV/build
+        mkdir -p ./build
+        cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$eigencmake ..
         cmake --build . --config "Release"
-        cd ../../
-        cp -r ./1dSAV/externals package/
-        rm -r -force ./1dSAV/
-        mv package/ 1dSAV/
-        compress-archive -Path 1dSAV -DestinationPath "1dSAV.zip"
+        cd ../
+        compress-archive -Path package -DestinationPath "tarte-tilde.zip"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -156,8 +145,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: src/maxmsp/1dSAV.zip
-        asset_name: 1dSAV.zip
+        asset_path: src/tarte-tilde/tarte-tilde.zip
+        asset_name: tarte-tilde.zip
         asset_content_type: application/zip
     - name: Publish release
       uses: StuYarrow/publish-release@v1.1.2
