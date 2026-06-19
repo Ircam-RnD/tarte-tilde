@@ -18,6 +18,7 @@ jobs:
     - name: Install Eigen
       run: |
         brew install eigen
+        brew info eigen
     - name: Install hdf5
       run: |
         brew install hdf5
