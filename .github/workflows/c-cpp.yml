@@ -21,6 +21,9 @@ jobs:
     - name: Install hdf5
       run: |
         brew install hdf5
+    - name: Install json
+      run: |
+        brew install nlohmann-json
     - name: Build external
       run: |
         cd src/tarte-tilde
@@ -71,6 +74,9 @@ jobs:
     - name: Install hdf5
       run: |
         brew install hdf5
+    - name: Install json
+      run: |
+        brew install nlohmann-json
     - name: Build external
       run: |
         cd src/tarte-tilde
