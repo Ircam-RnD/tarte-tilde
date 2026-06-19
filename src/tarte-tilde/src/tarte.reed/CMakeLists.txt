@@ -16,7 +16,7 @@ set(SOURCE_FILES
     tarte.reed.cpp
 )
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package (Eigen3 REQUIRED NO_MODULE)
 
 add_library(${PROJECT_NAME} MODULE ${SOURCE_FILES})
 
