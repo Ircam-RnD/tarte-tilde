@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.19)
+
+
 project(tarte-tilde)
 set (CMAKE_CXX_STANDARD 23)
 enable_testing()
 
 # Export compile config
 add_definitions(-DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
+
+message(STATUS "Deployment target: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 
 string(REGEX REPLACE "(.*)/" "" THIS_PACKAGE_NAME "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -28,7 +32,7 @@ if (APPLE)
 endif()
 
 # Externals directory
-set(C74_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/externals)
+set(C74_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/package/externals)
 
 # Main engine
 include(FetchContent)
@@ -54,3 +58,5 @@ foreach (project_dir ${PROJECT_DIRS})
         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${project_dir})
     endif ()
 endforeach ()
+
+message(STATUS "Deployment target: ${CMAKE_OSX_DEPLOYMENT_TARGET}")

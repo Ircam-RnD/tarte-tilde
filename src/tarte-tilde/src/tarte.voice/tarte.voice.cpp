@@ -76,7 +76,6 @@ public:
         setter{MIN_FUNCTION{
                 if (processor_){
                     processor_->set_noise_ratio(args[0]);
-                    cout << processor_->get_noise_ratio() << endl;
                 }
                 return args;
             }
@@ -161,7 +160,7 @@ public:
                     std::vector<ftype> areas;
                     areas.reserve(args.size());
                     for (auto& a : args)
-                        areas.push_back(static_cast<ftype>(a));
+                        areas.push_back(static_cast<ftype>(a) * 1e-4);
                     processor_->get_resonator()->SetTargetGeometry(areas.data(), areas.size());
                 } else if (args.size() == 2){
                     articulation_.SetFromFormants(args[0], args[1], NinterpVowel);
