@@ -124,16 +124,18 @@ jobs:
     - name: Install Eigen
       run: choco install eigen --yes
     - name: Install HDF5
-      run: choco install hdf5 --yes
+      run: vcpkg install hdf5:x64-windows
     - name: Install nlohmann-json
-      run: choco install nlohmann-json --yes
+      run: vcpkg install nlohmann-json:x64-windows
     - name: Build external
       shell: pwsh
       run: |
         cd src/tarte-tilde
         New-Item -ItemType Directory -Force -Path ./build
         cd ./build
-        cmake -DCMAKE_BUILD_TYPE=Release .. -A x64
+        cmake -DCMAKE_BUILD_TYPE=Release .. -A x64 `
+          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=x64-windows
         cmake --build . --config Release --verbose
         cd ..
         Compress-Archive -Path package -DestinationPath tarte-tilde.zip
