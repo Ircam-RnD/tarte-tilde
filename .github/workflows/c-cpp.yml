@@ -133,13 +133,16 @@ jobs:
         vcpkg install eigen3:x64-windows hdf5:x64-windows nlohmann-json:x64-windows
     - name: Build external
       shell: pwsh
+      env:
+        HDF5_ROOT: C:\vcpkg\installed\x64-windows
       run: |
         cd src/tarte-tilde
         New-Item -ItemType Directory -Force -Path ./build
         cd ./build
         cmake -DCMAKE_BUILD_TYPE=Release .. -A x64 `
           -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
-          -DVCPKG_TARGET_TRIPLET=x64-windows
+          -DVCPKG_TARGET_TRIPLET=x64-windows `
+          -DHDF5_ROOT="C:/vcpkg/installed/x64-windows"
         cmake --build . --config Release --verbose
         cd ..
         Compress-Archive -Path package -DestinationPath tarte-tilde.zip
