@@ -121,12 +121,16 @@ jobs:
       uses: actions/checkout@v4
     - name: Install submodules
       run: git submodule update --init --recursive
-    - name: Install Eigen
-      run: choco install eigen --yes
-    - name: Install HDF5
-      run: vcpkg install hdf5:x64-windows
-    - name: Install nlohmann-json
-      run: vcpkg install nlohmann-json:x64-windows
+    - name: Update vcpkg
+      shell: pwsh
+      run: |
+        cd C:\vcpkg
+        git pull
+        .\bootstrap-vcpkg.bat -disableMetrics
+    - name: Install dependencies via vcpkg
+      shell: pwsh
+      run: |
+        vcpkg install eigen3:x64-windows hdf5:x64-windows nlohmann-json:x64-windows
     - name: Build external
       shell: pwsh
       run: |

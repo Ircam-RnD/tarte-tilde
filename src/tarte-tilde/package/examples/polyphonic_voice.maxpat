@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 0.0, 95.0, 1141.0, 853.0 ],
+        "rect": [ -571.0, -988.0, 2526.0, 954.0 ],
         "openinpresentation": 1,
         "toolbars_unpinned_last_save": 1,
         "boxes": [
@@ -523,8 +523,8 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "signal" ],
-                    "patching_rect": [ 30.0, 315.0, 200.0, 22.0 ],
-                    "text": "poly~ voice_instance 11 @parallel 1"
+                    "patching_rect": [ 30.0, 315.0, 207.0, 22.0 ],
+                    "text": "poly~ voice_instance 110 @parallel 1"
                 }
             },
             {
