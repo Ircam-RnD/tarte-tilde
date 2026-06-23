@@ -37,6 +37,7 @@ set(C74_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/package/externals)
 # Main engine
 include(FetchContent)
 
+set(TARTE_USE_HDF5 OFF CACHE BOOL "" FORCE)  # Read/write writing support not needed
 FetchContent_Declare(
     tarte
     GIT_REPOSITORY https://github.com/Ircam-RnD/tarte

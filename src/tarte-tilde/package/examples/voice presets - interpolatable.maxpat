@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ -537.0, -988.0, 2492.0, 954.0 ],
+        "rect": [ -537.0, -988.0, 2155.0, 954.0 ],
         "openinpresentation": 1,
         "boxes": [
             {
@@ -227,8 +227,8 @@
                     "patching_rect": [ 1047.0, 228.5, 57.0, 51.0 ],
                     "presentation": 1,
                     "presentation_rect": [ 578.0, 319.0, 546.0, 490.0 ],
-                    "xplace": [ 0.1, 0.9, 0.75, 0.5, 0.05 ],
-                    "yplace": [ 0.1, 0.25, 0.8, 0.5, 0.95 ]
+                    "xplace": [ 0.1, 0.9, 0.75, 0.4835164835164835, 0.05 ],
+                    "yplace": [ 0.1, 0.25, 0.8, 0.5020408163265306, 0.95 ]
                 }
             },
             {
@@ -1687,8 +1687,8 @@
                     "id": "obj-29",
                     "maxclass": "newobj",
                     "numinlets": 1,
-                    "numoutlets": 2,
-                    "outlettype": [ "", "" ],
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
                     "patching_rect": [ 554.0, 218.0, 71.5, 22.0 ],
                     "text": "trackpad"
                 }
