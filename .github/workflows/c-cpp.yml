@@ -29,7 +29,8 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release .. -DCMAKE_OSX_ARCHITECTURES:STRING="x86_64;arm64"
         cmake --build . --config "Release" --verbose
         cd ../../..
-        zip -r "tarte-tilde.zip" package
+        cp -a package tarte-tilde
+        zip -r "tarte-tilde.zip" tarte-tilde
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
