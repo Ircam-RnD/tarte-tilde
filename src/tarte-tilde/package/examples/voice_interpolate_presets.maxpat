@@ -1726,8 +1726,8 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "multichannelsignal", "dict", "list" ],
-                    "patching_rect": [ 38.0, 345.0, 64.0, 22.0 ],
-                    "text": "tarte.voice"
+                    "patching_rect": [ 38.0, 345.0, 71.0, 22.0 ],
+                    "text": "tarte.voice~"
                 }
             },
             {
@@ -2542,7 +2542,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-116", 0 ],
-                    "midpoints": [ 70.0, 369.0, 92.5, 369.0 ],
+                    "midpoints": [ 73.5, 369.0, 92.5, 369.0 ],
                     "source": [ "obj-6", 1 ]
                 }
             },

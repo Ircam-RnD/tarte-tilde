@@ -13,7 +13,7 @@ include_directories(
 )
 
 set(SOURCE_FILES
-    tarte.voice.cpp
+    tarte.reed_tilde.cpp
 )
 
 find_package (Eigen3 5.0 REQUIRED NO_MODULE)

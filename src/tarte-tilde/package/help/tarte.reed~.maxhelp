@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 34.0, 95.0, 1444.0, 853.0 ],
+        "rect": [ 34.0, 95.0, 1069.0, 853.0 ],
         "boxes": [
             {
                 "box": {
@@ -384,6 +384,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "id": "obj-78",
                     "maxclass": "live.scope~",
                     "numinlets": 2,
@@ -505,6 +506,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "id": "obj-128",
                     "maxclass": "live.scope~",
                     "numinlets": 2,
@@ -631,6 +633,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "id": "obj-97",
                     "maxclass": "live.scope~",
                     "numinlets": 2,
@@ -690,6 +693,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "activebgcolor": [ 0.156862745098039, 0.156862745098039, 0.156862745098039, 0.0 ],
                     "activelinecolor": [ 0.30196078431372547, 1.0, 0.19607843137254902, 1.0 ],
                     "bgcolor": [ 0.156862745098039, 0.156862745098039, 0.156862745098039, 0.0 ],
@@ -708,6 +712,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "activebgcolor": [ 0.156862745098039, 0.156862745098039, 0.156862745098039, 0.0 ],
                     "activelinecolor": [ 0.19607843137254902, 0.5215686274509804, 1.0, 1.0 ],
                     "bgcolor": [ 0.156862745098039, 0.156862745098039, 0.156862745098039, 0.0 ],
@@ -727,6 +732,7 @@
             },
             {
                 "box": {
+                    "active": 0,
                     "id": "obj-36",
                     "maxclass": "live.scope~",
                     "mode": 1,
@@ -1018,8 +1024,8 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "multichannelsignal", "dict" ],
-                    "patching_rect": [ 38.0, 345.0, 60.0, 22.0 ],
-                    "text": "tarte.reed"
+                    "patching_rect": [ 38.0, 345.0, 67.0, 22.0 ],
+                    "text": "tarte.reed~"
                 }
             },
             {
@@ -1485,7 +1491,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-116", 0 ],
-                    "midpoints": [ 88.5, 370.0, 92.5, 370.0 ],
+                    "midpoints": [ 95.5, 370.0, 92.5, 370.0 ],
                     "source": [ "obj-20", 1 ]
                 }
             },

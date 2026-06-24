@@ -343,8 +343,8 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "multichannelsignal", "dict", "list" ],
-                    "patching_rect": [ 86.0, 434.0, 64.0, 22.0 ],
-                    "text": "tarte.voice"
+                    "patching_rect": [ 86.0, 434.0, 71.0, 22.0 ],
+                    "text": "tarte.voice~"
                 }
             },
             {
@@ -377,6 +377,10 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "patching_rect": [ 92.0, 43.0, 19.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "attr_comment": "",
+                        "c": ""
+                    },
                     "text": "in"
                 }
             },
@@ -387,10 +391,6 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 86.0, 506.0, 32.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "attr_comment": "",
-                        "c": ""
-                    },
                     "text": "out~"
                 }
             }

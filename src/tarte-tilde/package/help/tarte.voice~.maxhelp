@@ -1224,10 +1224,10 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 332.0, 143.0, 150.0, 33.0 ],
+                    "patching_rect": [ 332.0, 143.0, 153.0, 33.0 ],
                     "presentation": 1,
                     "presentation_linecount": 2,
-                    "presentation_rect": [ 295.0, 204.0, 150.0, 33.0 ],
+                    "presentation_rect": [ 295.0, 200.5, 153.0, 33.0 ],
                     "text": "Second formant frequency (usual values 450 - 2290)"
                 }
             },
@@ -1242,7 +1242,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 332.0, 189.0, 50.0, 22.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 295.0, 226.0, 50.0, 22.0 ]
+                    "presentation_rect": [ 331.0, 233.5, 50.0, 22.0 ]
                 }
             },
             {
@@ -1255,7 +1255,7 @@
                     "patching_rect": [ 182.0, 143.0, 150.0, 33.0 ],
                     "presentation": 1,
                     "presentation_linecount": 2,
-                    "presentation_rect": [ 143.0, 204.0, 150.0, 33.0 ],
+                    "presentation_rect": [ 141.0, 199.0, 150.0, 33.0 ],
                     "text": "First formant frequency (usual values 180 - 749)"
                 }
             },
@@ -1270,7 +1270,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 189.0, 189.0, 50.0, 22.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 148.0, 226.0, 50.0, 22.0 ]
+                    "presentation_rect": [ 182.0, 235.0, 50.0, 22.0 ]
                 }
             },
             {
@@ -1349,7 +1349,7 @@
                     "patching_rect": [ 30.0, 142.0, 115.0, 47.0 ],
                     "presentation": 1,
                     "presentation_linecount": 3,
-                    "presentation_rect": [ 30.0, 204.0, 115.0, 47.0 ],
+                    "presentation_rect": [ 30.0, 197.5, 115.0, 47.0 ],
                     "text": "Subglottal pressure (usual values 0 - 2000 )"
                 }
             },
@@ -1490,8 +1490,8 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "multichannelsignal", "dict", "list" ],
-                    "patching_rect": [ 38.0, 345.0, 64.0, 22.0 ],
-                    "text": "tarte.voice"
+                    "patching_rect": [ 38.0, 345.0, 71.0, 22.0 ],
+                    "text": "tarte.voice~"
                 }
             },
             {
@@ -1507,7 +1507,7 @@
                     "parameter_enable": 1,
                     "patching_rect": [ 30.0, 189.0, 50.0, 22.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 30.0, 226.0, 50.0, 22.0 ],
+                    "presentation_rect": [ 74.5, 235.0, 50.0, 22.0 ],
                     "saved_attribute_attributes": {
                         "valueof": {
                             "parameter_longname": "number",
@@ -1904,7 +1904,7 @@
                     "numoutlets": 0,
                     "patching_rect": [ 22.0, 92.0, 493.0, 204.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 26.0, 177.0, 460.0, 77.0 ],
+                    "presentation_rect": [ 28.0, 175.5, 460.0, 80.0 ],
                     "proportion": 0.5
                 }
             },
@@ -2674,7 +2674,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-116", 0 ],
-                    "midpoints": [ 70.0, 369.0, 92.5, 369.0 ],
+                    "midpoints": [ 73.5, 369.0, 92.5, 369.0 ],
                     "source": [ "obj-6", 1 ]
                 }
             },
