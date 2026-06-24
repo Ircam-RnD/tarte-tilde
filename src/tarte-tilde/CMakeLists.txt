@@ -32,7 +32,7 @@ if (APPLE)
 endif()
 
 # Externals directory
-set(C74_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/package/externals)
+set(C74_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../package/externals)
 
 # Main engine
 include(FetchContent)

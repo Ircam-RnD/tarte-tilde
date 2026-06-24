@@ -1,6 +1,6 @@
 {
     "name": "tarte-tilde",
-    "author": "Thomas RISSE",
+    "author": "Thomas RISSE, Alois CERBU",
     "description": "Physical modelling synthesis (for now: voice only)",
     "homepatcher": "examples/voice_interpolate_presets.maxpat",
     "max_version_min": "8.0",
