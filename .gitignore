@@ -43,6 +43,6 @@ build/
 # Max MSP
 **/externals/
 
-**/docs/
+# **/docs/
 
 xcode
