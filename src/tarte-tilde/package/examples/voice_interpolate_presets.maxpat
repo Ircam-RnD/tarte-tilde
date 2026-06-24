@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ -537.0, -988.0, 2155.0, 954.0 ],
+        "rect": [ 34.0, 95.0, 1107.0, 853.0 ],
         "openinpresentation": 1,
         "boxes": [
             {
@@ -227,8 +227,8 @@
                     "patching_rect": [ 1047.0, 228.5, 57.0, 51.0 ],
                     "presentation": 1,
                     "presentation_rect": [ 578.0, 319.0, 546.0, 490.0 ],
-                    "xplace": [ 0.1, 0.9, 0.75, 0.4835164835164835, 0.05 ],
-                    "yplace": [ 0.1, 0.25, 0.8, 0.5020408163265306, 0.95 ]
+                    "xplace": [ 0.1, 0.9, 0.75, 0.5, 0.05 ],
+                    "yplace": [ 0.1, 0.25, 0.8, 0.5, 0.95 ]
                 }
             },
             {
@@ -241,7 +241,7 @@
                     "numoutlets": 0,
                     "patching_rect": [ 243.0, 97.0, 195.0, 24.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 365.0, 7.0, 152.0, 24.0 ],
+                    "presentation_rect": [ 1133.0, 362.0, 152.0, 24.0 ],
                     "text": "Presets",
                     "textcolor": [ 0.88529247045517, 0.673130631446838, 0.377244234085083, 1.0 ],
                     "textjustification": 1
@@ -273,7 +273,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 1238.0, 45.0, 154.0, 180.0 ],
                     "presentation": 1,
-                    "presentation_rect": [ 363.0, 5.0, 154.0, 140.0 ],
+                    "presentation_rect": [ 1131.0, 360.0, 154.0, 140.0 ],
                     "textcolor": [ 0.88529247045517, 0.673130631446838, 0.377244234085083, 1.0 ],
                     "varname": "chooser"
                 }
@@ -338,7 +338,7 @@
                     "patching_rect": [ 1441.0, 60.5, 440.0, 194.0 ],
                     "presentation": 1,
                     "presentation_linecount": 10,
-                    "presentation_rect": [ 560.0, 7.0, 693.0, 163.0 ],
+                    "presentation_rect": [ 320.5, 7.0, 693.0, 163.0 ],
                     "text": "If the patch, including the trackpad object, loads correctly, then subglottal pressure should be controlled by the pressure of your finger on the mac's trackpad. \nThe position on the trackpad should control the vowel in F1-F2 space.\n\nIf the trackpad object doesn't load, you can still use the patch by changing values of subglottal pressure and formant frequencies. Constant values give quite robotic sounds, but mapping to some kind of controller should give better results.\n\nThanks for experimenting with this patch! You can reach me at:\nthomas.risse@ircam.fr"
                 }
             },
@@ -1687,8 +1687,8 @@
                     "id": "obj-29",
                     "maxclass": "newobj",
                     "numinlets": 1,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
                     "patching_rect": [ 554.0, 218.0, 71.5, 22.0 ],
                     "text": "trackpad"
                 }
