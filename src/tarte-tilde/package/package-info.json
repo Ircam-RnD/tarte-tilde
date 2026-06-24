@@ -1,0 +1,24 @@
+{
+    "name": "tarte-tilde",
+    "author": "Thomas RISSE",
+    "description": "Physical modelling synthesis (for now: voice only)",
+    "homepatcher": "examples/voice_interpolate_presets.maxpat",
+    "max_version_min": "8.0",
+    "max_version_max": "none",
+    "os": {
+        "macintosh": {
+            "platform": [
+                "x64",
+                "arm64"
+            ],
+            "min_version": "none"
+        }
+    },
+    "tags": [
+        "max",
+        "physical",
+        "modelling"
+    ],
+    "version": "0.0.1",
+    "website": "https://github.com/Ircam-RnD/tarte-tilde"
+}
