@@ -1689,8 +1689,8 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 554.0, 218.0, 71.5, 22.0 ],
-                    "text": "trackpad"
+                    "patching_rect": [ 554.0, 218.0, 82.0, 22.0 ],
+                    "text": "tarte.trackpad"
                 }
             },
             {

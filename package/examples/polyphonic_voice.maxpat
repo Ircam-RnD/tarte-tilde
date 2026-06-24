@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ -571.0, -988.0, 2526.0, 954.0 ],
+        "rect": [ -516.0, -988.0, 2526.0, 954.0 ],
         "openinpresentation": 1,
         "toolbars_unpinned_last_save": 1,
         "boxes": [
@@ -558,8 +558,8 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 30.0, 193.0, 71.5, 22.0 ],
-                    "text": "trackpad"
+                    "patching_rect": [ 30.0, 193.0, 82.0, 22.0 ],
+                    "text": "tarte.trackpad"
                 }
             },
             {
