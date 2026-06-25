@@ -945,19 +945,6 @@
             },
             {
                 "box": {
-                    "id": "obj-35",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 415.0, 124.0, 42.0, 22.0 ],
-                    "presentation": 1,
-                    "presentation_rect": [ 123.0, 128.0, 42.0, 22.0 ],
-                    "text": "freeze"
-                }
-            },
-            {
-                "box": {
                     "id": "obj-34",
                     "maxclass": "message",
                     "numinlets": 2,
@@ -1573,13 +1560,6 @@
                     "destination": [ "obj-29", 0 ],
                     "midpoints": [ 323.5, 148.0, 323.5, 148.0 ],
                     "source": [ "obj-34", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "obj-29", 0 ],
-                    "midpoints": [ 424.5, 163.0, 323.5, 163.0 ],
-                    "source": [ "obj-35", 0 ]
                 }
             },
             {
