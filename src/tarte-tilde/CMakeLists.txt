@@ -60,3 +60,5 @@ foreach (project_dir ${PROJECT_DIRS})
     endif ()
 endforeach ()
 
+
+message(STATUS "Deployment target: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
