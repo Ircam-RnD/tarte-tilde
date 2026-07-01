@@ -136,6 +136,8 @@ static volatile pid_t g_frozen_dock_pid = -1;
 static t_systhread  g_escape_thread = NULL;
 static volatile int g_escape_active = 0;
 
+bool frozen = false;
+
 #define ESCAPE_POLL_MS 50
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -373,6 +375,7 @@ static void *escape_thread_fn(void *arg)
     }
 
     g_escape_thread = NULL;
+    frozen = false;
     return NULL;
 }
 
@@ -702,23 +705,29 @@ void trackpad_devices(t_trackpad *x)
 
 void trackpad_freeze(t_trackpad *x)
 {
-    CGAssociateMouseAndMouseCursorPosition(false);
-    CGDisplayHideCursor(kCGDirectMainDisplay);
-    freeze_gestures(x);
-    actuator_set_clicks(x, false);
-    install_escape_poll();
-    post("trackpad: frozen — cursor decoupled, gestures suppressed, "
-         "click disabled (Escape to release)");
+    if (!frozen){
+        CGAssociateMouseAndMouseCursorPosition(false);
+        CGDisplayHideCursor(kCGDirectMainDisplay);
+        freeze_gestures(x);
+        actuator_set_clicks(x, false);
+        install_escape_poll();
+        post("trackpad: frozen — cursor decoupled, gestures suppressed, "
+            "click disabled (Escape to release)");
+        frozen = true;
+    }
 }
 
 void trackpad_unfreeze(t_trackpad *x)
 {
-    remove_escape_poll();
-    actuator_set_clicks(x, true);
-    unfreeze_gestures(x);
-    CGAssociateMouseAndMouseCursorPosition(true);
-    CGDisplayShowCursor(kCGDirectMainDisplay);
-    post("trackpad: unfrozen — all behavior restored");
+    if (frozen){
+        remove_escape_poll();
+        actuator_set_clicks(x, true);
+        unfreeze_gestures(x);
+        CGAssociateMouseAndMouseCursorPosition(true);
+        CGDisplayShowCursor(kCGDirectMainDisplay);
+        post("trackpad: unfrozen — all behavior restored");
+        frozen = false;
+    }
 }
 
 /* ── haptics ───────────────────────────────────────────────────────────── */
