@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.19)
 set(C74_MIN_API_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../min-api)
 include(${C74_MIN_API_DIR}/script/min-pretarget.cmake)
 if(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "Minimum macOS version" FORCE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum macOS version" FORCE)
 endif()
 
 
