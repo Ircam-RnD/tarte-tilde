@@ -11,7 +11,7 @@
                 "x64",
                 "arm64"
             ],
-            "min_version": "none"
+            "min_version": "12"
         }
     },
     "tags": [
